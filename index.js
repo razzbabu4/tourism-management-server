@@ -44,6 +44,13 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/touristSpots/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await touristSpotsCollection.findOne(query);
+            res.send(result)
+        })
+
         app.post('/touristSpots', async (req, res) => {
             const newTouristSpots = req.body;
             console.log(newTouristSpots);
@@ -51,12 +58,35 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/deleteSpots/:id', async(req,res)=>{
+        app.put('/touristSpots/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: new ObjectId(id)};
+            const spot = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    image: spot.image,
+                    tourists_spot_name: spot.tourists_spot_name,
+                    country_Name: spot.country_Name,
+                    location: spot.location,
+                    average_cost: spot.average_cost,
+                    seasonality: spot.seasonality,
+                    travel_time: spot.travel_time,
+                    totalVisitorsPerYear: spot.totalVisitorsPerYear,
+                    description: spot.description,
+                },
+            };
+            const result = await touristSpotsCollection.updateOne(filter, updateDoc, options);
+            res.send(result)
+        })
+
+        app.delete('/deleteSpots/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
             const result = await touristSpotsCollection.deleteOne(query);
             res.send(result)
         })
+
 
         // Send a ping to confirm a successful connection
         // await client.db("admin").command({ ping: 1 });
