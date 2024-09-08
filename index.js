@@ -43,6 +43,13 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/touristSpots/:countryName', async (req, res) => {
+            const spot = req.params.countryName;
+            const cursor = touristSpotsCollection.find({country_Name : spot});
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
         app.get('/myList/:email', async (req, res) => {
             const email = req.params.email;
             const query = { userEmail: email };
@@ -51,6 +58,7 @@ async function run() {
             res.send(result)
         })
 
+        
         app.get('/touristSpots/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
